@@ -2,4 +2,9 @@
 {% block title %}Register a new user{% endblock %}
 {% block content %}
     <h1>Register a new user</h1>
+    <form method="post" action="/users/register/" class="form-width-validation">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="form-submit">Submit</button>
+    </form>
 {% endblock content %}
