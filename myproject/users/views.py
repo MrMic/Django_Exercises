@@ -1,9 +1,10 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render
 
 
 # Create your views here.
+# ______________________________________________________________________
 def register_view(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -15,12 +16,23 @@ def register_view(request):
     return render(request, "users/register.html", {"form": form})
 
 
+# ______________________________________________________________________
 def login_view(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect("posts:list")
+            if "next" in request.POST:
+                return redirect(request.POST.get("next"))
+            else:
+                return redirect("posts:list")
     else:
         form = AuthenticationForm()
     return render(request, "users/login.html", {"form": form})
+
+
+# ______________________________________________________________________
+def logout_view(request):
+    if request.method == "POST":
+        logout(request)
+        return redirect("posts:list")
